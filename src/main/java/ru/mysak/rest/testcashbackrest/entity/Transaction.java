@@ -1,7 +1,7 @@
 package ru.mysak.rest.testcashbackrest.entity;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import ru.mysak.rest.testcashbackrest.util.state.TransactionState;
 
 import javax.persistence.*;
 
@@ -17,10 +17,11 @@ public class Transaction {
     public Bill bill;
 
     public String state;
+    @Transient
+    public TransactionState transactionState;
 
-    public Transaction(Bill bill, String state) {
+    public Transaction(Bill bill) {
         this.bill = bill;
-        this.state = state;
     }
 
     public Transaction() {

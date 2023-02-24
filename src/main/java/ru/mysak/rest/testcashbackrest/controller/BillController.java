@@ -19,13 +19,27 @@ public class BillController {
 
     @GetMapping("/{client_id}/money")
     public double clientDeposit(@PathVariable Long client_id) {
-        Bill bill = billService.readByClientId(client_id);
-        double deposit = bill.getDeposit();
-        return deposit;
+        return billService.readByClientId(client_id).getDeposit();
     }
+
     @GetMapping("/{client_id}/bankAccountOfEMoney")
     public double clientCashback(@PathVariable Long client_id) {
         return billService.readByClientId(client_id).getCashback();
+    }
+
+    @GetMapping("/payment/{client_id}/{payment_type}/{amount}")
+    public boolean doPayment(@PathVariable Long client_id,
+                             @PathVariable String payment_type,
+                             @PathVariable int amount) {
+        if (payment_type.equalsIgnoreCase("online")) {
+            boolean result = paymentFacade.onlinePayment(client_id, amount);
+            return result;
+        } else if (payment_type.equalsIgnoreCase("shop")) {
+            boolean result = paymentFacade.offlineShopPayment(client_id, amount);
+            return result;
+        }
+
+        return false;
     }
 
 }

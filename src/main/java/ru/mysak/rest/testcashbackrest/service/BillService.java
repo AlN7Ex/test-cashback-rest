@@ -2,7 +2,6 @@ package ru.mysak.rest.testcashbackrest.service;
 
 import org.springframework.stereotype.Service;
 import ru.mysak.rest.testcashbackrest.entity.Bill;
-import ru.mysak.rest.testcashbackrest.entity.Client;
 
 import java.util.List;
 
