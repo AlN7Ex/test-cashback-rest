@@ -2,10 +2,12 @@ package ru.mysak.rest.testcashbackrest.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.mysak.rest.testcashbackrest.TransactionalStateType;
 import ru.mysak.rest.testcashbackrest.entity.Transaction;
 import ru.mysak.rest.testcashbackrest.repository.TransactionRepository;
 import ru.mysak.rest.testcashbackrest.util.state.CreatedTransactionState;
 import ru.mysak.rest.testcashbackrest.util.state.TransactionState;
+import ru.mysak.rest.testcashbackrest.util.state.TransactionStateFactory;
 
 import java.util.List;
 
@@ -14,6 +16,7 @@ import java.util.List;
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
+    private final TransactionStateFactory transactionStateFactory;
     @Override
     public Transaction read(Long id) {
         return transactionRepository.findTransactionById(id);
@@ -31,16 +34,17 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public boolean create(Transaction transaction) {
-        String created = new CreatedTransactionState().doAction(transaction);
-        transaction.setState(created);
+        new CreatedTransactionState().doAction(transaction);
+        transaction.action();
         transactionRepository.save(transaction);
         return true;
     }
 
     @Override
-    public boolean update(Transaction transaction, TransactionState transactionState) {
-        String state = transactionState.doAction(transaction);
-        transaction.setState(state);
+    public boolean update(Transaction transaction, TransactionalStateType stateType) {
+        TransactionState transactionState = transactionStateFactory.getState(stateType);
+        transactionState.doAction(transaction);
+        transaction.action();
         transactionRepository.save(transaction);
         return true;
     }

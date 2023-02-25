@@ -9,7 +9,6 @@ import ru.mysak.rest.testcashbackrest.entity.Transaction;
 import ru.mysak.rest.testcashbackrest.service.BillServiceImpl;
 import ru.mysak.rest.testcashbackrest.service.TransactionServiceImpl;
 import ru.mysak.rest.testcashbackrest.util.payment.PaymentServiceFactory;
-import ru.mysak.rest.testcashbackrest.util.state.TransactionStateFactory;
 
 @Service
 @AllArgsConstructor
@@ -17,8 +16,6 @@ public class PaymentFacadeImpl implements PaymentFacade {
     private final BillServiceImpl billService;
     private final TransactionServiceImpl transactionService;
     private final PaymentServiceFactory paymentService;
-    private final TransactionStateFactory stateFactory;
-
 
     @Override
     public boolean onlinePayment(Long client_id, int price) {
@@ -29,15 +26,15 @@ public class PaymentFacadeImpl implements PaymentFacade {
 
         Transaction transaction = new Transaction(bill);
         transactionService.create(transaction);
-        transactionService.update(transaction, stateFactory.getState(TransactionalStateType.PROGRESS));
+        transactionService.update(transaction, TransactionalStateType.PROGRESS);
         if (bill.getDeposit() < price) {
-            transactionService.update(transaction, stateFactory.getState(TransactionalStateType.FAILED));
+            transactionService.update(transaction, TransactionalStateType.FAILED);
             return false;
         }
         paymentService.doOperation(bill, price, PaymentType.ONLINE);
         billService.update(bill);
 
-        transactionService.update(transaction, stateFactory.getState(TransactionalStateType.COMPLETED));
+        transactionService.update(transaction, TransactionalStateType.COMPLETED);
 
         return true;
     }
@@ -51,14 +48,14 @@ public class PaymentFacadeImpl implements PaymentFacade {
 
         Transaction transaction = new Transaction(bill);
         transactionService.create(transaction);
-        transactionService.update(transaction, stateFactory.getState(TransactionalStateType.PROGRESS));
+        transactionService.update(transaction, TransactionalStateType.PROGRESS);
         if (bill.getDeposit() < price) {
-            transactionService.update(transaction, stateFactory.getState(TransactionalStateType.FAILED));
+            transactionService.update(transaction, TransactionalStateType.FAILED);
             return false;
         }
         paymentService.doOperation(bill, price, PaymentType.ONLINE);
         billService.update(bill);
-        transactionService.update(transaction, stateFactory.getState(TransactionalStateType.COMPLETED));
+        transactionService.update(transaction, TransactionalStateType.COMPLETED);
 
         return true;
     }

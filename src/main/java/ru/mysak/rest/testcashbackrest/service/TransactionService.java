@@ -1,9 +1,8 @@
 package ru.mysak.rest.testcashbackrest.service;
 
 import org.springframework.stereotype.Service;
-import ru.mysak.rest.testcashbackrest.entity.Client;
+import ru.mysak.rest.testcashbackrest.TransactionalStateType;
 import ru.mysak.rest.testcashbackrest.entity.Transaction;
-import ru.mysak.rest.testcashbackrest.util.state.TransactionState;
 
 import java.util.List;
 
@@ -14,6 +13,6 @@ public interface TransactionService {
     Transaction readByBillId(Long bill_id);
     List<Transaction> readAll();
     boolean create(Transaction transaction);
-    boolean update(Transaction transaction, TransactionState state);
+    boolean update(Transaction transaction, TransactionalStateType stateType);
     boolean delete(Long id);
 }
