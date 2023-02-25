@@ -4,8 +4,11 @@ import ru.mysak.rest.testcashbackrest.entity.Transaction;
 
 public class FailedTransactionState implements TransactionState{
     @Override
-    public String doAction(Transaction transaction) {
+    public void doAction(Transaction transaction) {
         transaction.setTransactionState(this);
+    }
+    @Override
+    public String getTransactionState() {
         return "Failed transaction";
     }
 }
